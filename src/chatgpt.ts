@@ -1,4 +1,5 @@
 import { ChatGPTAPI, ChatGPTAPIBrowser } from "chatgpt";
+import { randomInt } from "node:crypto";
 
 import { config } from "./config.js";
 import AsyncRetry from "async-retry";
@@ -119,7 +120,7 @@ export class ChatGPTPool {
   // Randome get chatgpt item form pool
   get chatGPTAPI(): IChatGPTItem {
     return this.chatGPTPools[
-      Math.floor(Math.random() * this.chatGPTPools.length)
+      this.chatGPTPools.length ? randomInt(this.chatGPTPools.length) : 0
     ];
   }
   // Randome get conversation item form pool
@@ -177,12 +178,10 @@ export class ChatGPTPool {
       if (err.message.includes("ChatGPT failed to refresh auth token")) {
         // If refresh token failed, we will remove the conversation from pool
         await this.resetAccount(account);
-        console.log(`Refresh token failed, account ${JSON.stringify(account)}`);
+        console.log("Refresh token failed");
         return this.sendMessage(message, talkid);
       }
-      console.error(
-        `err is ${err.message}, account ${JSON.stringify(account)}`
-      );
+      console.error(`err is ${err.message}`);
       // If send message failed, we will remove the conversation from pool
       this.conversationsPool.delete(talkid);
       // Retry
