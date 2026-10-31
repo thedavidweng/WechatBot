@@ -28,6 +28,15 @@
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1"
   },
+  "overrides": {
+    "request": {
+      "form-data": "2.5.6"
+    },
+    "puppeteer": {
+      "tar-fs": "2.1.4",
+      "ws": "8.21.0"
+    }
+  },
   "nodemonConfig": {
     "watch": "src",
     "ext": "ts",
